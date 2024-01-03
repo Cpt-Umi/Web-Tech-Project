@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.js"
+      defer
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <title>Alpine</title>
+  </head>
+
+  <body>
+    <div
+      x-data="calendar()"
+      x-init="initCalendar"
+      class="bg-gray-200 min-h-screen flex items-center justify-center"
+    >
+      <div class="text-center w-96 p-8 bg-white rounded shadow-lg">
+        <div class="flex items-center justify-between mb-6">
+          <button
+            @click="prevMonth"
+            class="text-lg font-semibold text-gray-600 hover:text-gray-800 bg-gray-200 rounded-full p-2"
+          >
+            &lt;
+          </button>
+          <span
+            class="text-2xl font-bold text-gray-800"
+            x-text="monthName(selectedMonth) + ' ' + selectedYear"
+          ></span>
+          <button
+            @click="nextMonth"
+            class="text-lg font-semibold text-gray-600 hover:text-gray-800 bg-gray-200 rounded-full p-2"
+          >
+            &gt;
+          </button>
+        </div>
+
+        <div class="flex items-center justify-center md:w-2/3 mx-auto">
+          <table class="w-full">
+            <!-- <caption
+              class="text-2xl font-bold mb-4 text-gray-800"
+              x-text="monthName(selectedMonth) + ' ' + selectedYear"
+            ></caption> -->
+            <thead>
+              <tr>
+                <th class="py-2 text-sm text-gray-600">Sun</th>
+                <th class="py-2 text-sm text-gray-600">Mon</th>
+                <th class="py-2 text-sm text-gray-600">Tue</th>
+                <th class="py-2 text-sm text-gray-600">Wed</th>
+                <th class="py-2 text-sm text-gray-600">Thu</th>
+                <th class="py-2 text-sm text-gray-600">Fri</th>
+                <th class="py-2 text-sm text-gray-600">Sat</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template
+                x-for="(week, weekIndex) in calendarData"
+                :key="weekIndex"
+              >
+                <tr>
+                  <template x-for="(day, dayIndex) in week" :key="dayIndex">
+                    <td
+                      class="py-2 text-center text-gray-800 font-semibold px-2"
+                      x-text="day"
+                      x-bind:class="{ 'text-red-500': day !== '' && dayIndex === 0, 'border border-blue-500 bg-blue-200 rounded-full': isCurrentDate(day) }"
+                    ></td>
+                  </template>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div
+      x-data="{ formData: { checkin: null, checkout: null, date: null } }"
+      class="p-6 bg-gray-100"
+    >
+      <!-- Your form inputs -->
+      <div class="mb-4">
+        <label for="checkin" class="block text-gray-700 font-bold"
+          >Check-in:</label
+        >
+        <input
+          type="time"
+          id="checkin"
+          name="checkin"
+          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          x-model="formData.checkin"
+        />
+      </div>
+      <div class="mb-4">
+        <label for="checkout" class="block text-gray-700 font-bold"
+          >Check-out:</label
+        >
+        <input
+          type="time"
+          id="checkout"
+          name="checkout"
+          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          x-model="formData.checkout"
+        />
+      </div>
+      <div class="mb-4">
+        <label for="date" class="block text-gray-700 font-bold">Date:</label>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          x-model="formData.date"
+        />
+      </div>
+
+      <!-- Button to trigger the API request -->
+      <div class="flex flex-col items-center">
+        <button
+          @click="postData"
+          class="bg-gray-700 text-white p-2 rounded w-32"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function calendar() {
+        return {
+          selectedYear: 0,
+          selectedMonth: 0,
+          selectedDay: 0,
+          daysInMonth: function (month, year) {
+            return new Date(year, month, 0).getDate();
+          },
+          initCalendar: function () {
+            const currentDate = new Date();
+            this.selectedYear = currentDate.getFullYear();
+            this.selectedMonth = currentDate.getMonth() + 1;
+            this.selectedDay = currentDate.getDate();
+            this.updateCalendar();
+          },
+          updateCalendar: function () {
+            const daysInSelectedMonth = this.daysInMonth(
+              this.selectedMonth,
+              this.selectedYear
+            );
+            const firstDayOfMonth = new Date(
+              this.selectedYear,
+              this.selectedMonth - 1,
+              1
+            ).getDay();
+            let week = [];
+            const calendarData = [];
+
+            for (let i = 0; i < firstDayOfMonth; i++) {
+              week.push("");
+            }
+
+            for (let day = 1; day <= daysInSelectedMonth; day++) {
+              if (week.length === 7) {
+                calendarData.push([...week]);
+                week = [];
+              }
+              week.push(day);
+            }
+
+            while (week.length < 7) {
+              week.push("");
+            }
+
+            calendarData.push([...week]);
+
+            console.log(calendarData);
+            // console.log(week);
+            while (calendarData.length < 6) {
+              const deadWeek = ["", "", "", "", "", "", ""];
+              calendarData.push(["69"]);
+            }
+
+            this.calendarData = calendarData;
+          },
+          monthName: function (month) {
+            const monthNames = [
+              "January",
+              "February",
+              "March",
+              "April",
+              "May",
+              "June",
+              "July",
+              "August",
+              "September",
+              "October",
+              "November",
+              "December",
+            ];
+            return monthNames[month - 1];
+          },
+          calendarData: [],
+          prevYear: function () {
+            this.selectedYear--;
+            this.updateCalendar();
+          },
+          nextYear: function () {
+            this.selectedYear++;
+            this.updateCalendar();
+          },
+          prevMonth: function () {
+            if (this.selectedMonth === 1) {
+              this.selectedMonth = 12;
+              this.selectedYear--;
+            } else {
+              this.selectedMonth--;
+            }
+            this.updateCalendar();
+          },
+          nextMonth: function () {
+            if (this.selectedMonth === 12) {
+              this.selectedMonth = 1;
+              this.selectedYear++;
+            } else {
+              this.selectedMonth++;
+            }
+            this.updateCalendar();
+          },
+          isCurrentDate: function (day) {
+            return (
+              this.selectedYear === new Date().getFullYear() &&
+              this.selectedMonth === new Date().getMonth() + 1 &&
+              day === new Date().getDate()
+            );
+          },
+        };
+      }
+
+      function postData() {
+        // Assuming your API endpoint is 'https://example.com/api'
+        fetch("https://example.com/api", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(this.formData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+            // Handle the response data as needed
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            // Handle errors
+          });
+      }
+    </script>
+  </body>
+</html>
