@@ -129,7 +129,7 @@
     </div>
 
     <script>
-      const calendarData = [];
+      let calendarData = [];
       function calendar() {
         return {
           selectedYear: 0,
@@ -156,8 +156,7 @@
               1
             ).getDay();
             let week = [];
-            
-
+            calendarData = [];
             for (let i = 0; i < firstDayOfMonth; i++) {
               week.push("");
             }
@@ -241,7 +240,7 @@
 
       function postData() {
         // Assuming your API endpoint is 'https://example.com/api'
-        console.log(calendarData)
+        console.log(calendarData);
         fetch("http://localhost:5000/", {
           method: "POST",
           headers: {
