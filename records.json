@@ -1,32 +1,32 @@
 [
-    {
-      "recordId": 1,
-      "employeeId": 1,
-      "checkInTime": "2024-01-02T09:00:00",
-      "checkOutTime": "2024-01-02T17:00:00"
-    },
-    {
-      "recordId": 2,
-      "employeeId": 1,
-      "checkInTime": "2024-01-03T09:15:00",
-      "checkOutTime": "2024-01-03T17:30:00"
-    },
-    {
-      "recordId": 3,
-      "employeeId": 1,
-      "checkInTime": "2024-01-04T09:30:00",
-      "checkOutTime": "2024-01-04T18:00:00"
-    },
-    {
-      "recordId": 4,
-      "employeeId": 1,
-      "checkInTime": "2024-01-05T09:10:00",
-      "checkOutTime": "2024-01-05T17:45:00"
-    },
-    {
-      "recordId": 5,
-      "employeeId": 1,
-      "checkInTime": "2024-01-06T09:45:00",
-      "checkOutTime": "2024-01-06T17:15:00"
-    }
+  {
+    "recordId": 1,
+    "employeeId": 1,
+    "checkInTime": "2024-01-02T09:00:00.000Z",
+    "checkOutTime": "2024-01-02T17:00:00.000Z"
+  },
+  {
+    "recordId": 2,
+    "employeeId": 1,
+    "checkInTime": "2024-01-03T09:15:00.000Z",
+    "checkOutTime": "2024-01-03T17:30:00.000Z"
+  },
+  {
+    "recordId": 3,
+    "employeeId": 1,
+    "checkInTime": "2024-01-04T09:30:00.000Z",
+    "checkOutTime": "2024-01-04T18:00:00.000Z"
+  },
+  {
+    "recordId": 4,
+    "employeeId": 1,
+    "checkInTime": "2024-01-05T09:10:00.000Z",
+    "checkOutTime": "2024-01-05T17:45:00.000Z"
+  },
+  {
+    "recordId": 5,
+    "employeeId": 1,
+    "checkInTime": "2024-01-06T09:45:00.000Z",
+    "checkOutTime": "2024-01-06T17:15:00.000Z"
+  }
 ]

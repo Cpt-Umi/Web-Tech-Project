@@ -20,7 +20,7 @@
       x-init="initCalendar"
       class="bg-gray-200 min-h-screen flex items-center justify-center"
     >
-      <div class="text-center w-96 p-8 bg-white rounded shadow-lg">
+      <div class="text-center w-126 p-8 bg-white rounded shadow-lg">
         <div class="flex items-center justify-between mb-6">
           <button
             @click="prevMonth"
@@ -40,7 +40,7 @@
           </button>
         </div>
 
-        <div class="flex items-center justify-center md:w-2/3 mx-auto">
+        <div class="flex items-center justify-center md:w-96 mx-auto">
           <table class="w-full">
             <!-- <caption
               class="text-2xl font-bold mb-4 text-gray-800"
@@ -130,6 +130,8 @@
 
     <script>
       let calendarData = [];
+      let currentMonth = 0;
+      let currentYear = 0;
       function calendar() {
         return {
           selectedYear: 0,
@@ -177,12 +179,14 @@
 
             console.log(calendarData);
             // console.log(week);
-            while (calendarData.length < 6) {
-              const deadWeek = [" ", " ", " ", "", "", "", ""];
-              calendarData.push(["420"]);
-            }
+            // while (calendarData.length < 6) {
+            //   const deadWeek = ["", " ", " ", "", "", "", ""];
+            //   calendarData.push([...deadWeek]);
+            // }
 
             this.calendarData = calendarData;
+            currentMonth = this.selectedMonth;
+            currentYear = this.selectedYear;
           },
           monthName: function (month) {
             const monthNames = [
@@ -241,12 +245,14 @@
       function postData() {
         // Assuming your API endpoint is 'https://example.com/api'
         console.log(calendarData);
+        console.log(currentMonth);
+        console.log(currentYear);
         fetch("http://localhost:5000/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(calendarData),
+          body: JSON.stringify({ calendarData, currentMonth, currentYear }),
         })
           .then((response) => response.json())
           .then((data) => {
