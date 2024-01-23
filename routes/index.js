@@ -30,7 +30,7 @@ const db = require("../models/index.js");
 
 router.post("/", async (req, res) => {
     const { calendarData, currentMonth, currentYear } = req.body;
-    //   console.log(calendarData);
+    console.log(calendarData);
 
     let startDate = new Date(
         Date.UTC(currentYear, currentMonth - 1, 1, 0, 0, 0, 0)
@@ -47,14 +47,38 @@ router.post("/", async (req, res) => {
         .sort((a, b) => a.recordId - b.recordId);
     console.log(filterOut);
 
-    //   console.log("Start: ", startDate);
-    //   console.log("End: ", endDate);
-    //   const result = await db.Record.find({
-    //     checkInTime: {
-    //       $gt: startDate,
-    //       $lt: endDate,
-    //     },
-    //   });
+    const workingHoursByWeek = [];
+
+    calendarData.forEach((week, weekIndex) => {
+        let totalWorkingHours = 0;
+
+        week.forEach((day) => {
+            const matchingRecord = filterOut.find((r) => {
+                const recordDay = new Date(r.checkInTime).getUTCDate();
+                return (
+                    recordDay === day &&
+                    r.checkInTime >= startDate &&
+                    r.checkOutTime < endDate
+                );
+            });
+
+            if (matchingRecord) {
+                const checkInTime = new Date(matchingRecord.checkInTime);
+                const checkOutTime = new Date(matchingRecord.checkOutTime);
+                const workingHoursForDay =
+                    (checkOutTime - checkInTime) / (1000 * 60 * 60);
+                totalWorkingHours += workingHoursForDay;
+            }
+        });
+
+        workingHoursByWeek.push({
+            weekIndex: weekIndex + 1,
+            totalWorkingHours,
+        });
+    });
+
+    // console.log(workingHoursByWeek);
+    res.status(200).json(workingHoursByWeek);
 });
 
 module.exports = router;
